@@ -13,11 +13,14 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# --- 2. ADVANCED UI SYSTEM (CSS) ---
+# --- 2. ADVANCED UI SYSTEM (CSS FOR BUILDER) ---
 st.markdown("""
     <style>
+    /* UI Reset & Variables */
     :root { --primary: #0f172a; --accent: #3b82f6; }
     .stApp { background-color: #f8fafc; color: #1e293b; font-family: 'Inter', sans-serif; }
+    
+    /* Sidebar Styling */
     [data-testid="stSidebar"] { background-color: #ffffff; border-right: 1px solid #e2e8f0; }
     [data-testid="stSidebar"] h1 { 
         background: linear-gradient(90deg, #0f172a, #3b82f6);
@@ -26,20 +29,37 @@ st.markdown("""
         font-weight: 900 !important;
         font-size: 1.8rem !important;
     }
+    
+    /* Modern Inputs */
     .stTextInput input, .stTextArea textarea, .stSelectbox div[data-baseweb="select"] {
-        background-color: #ffffff !important; border: 1px solid #cbd5e1 !important; border-radius: 8px !important; color: #0f172a !important;
+        background-color: #ffffff !important;
+        border: 1px solid #cbd5e1 !important;
+        border-radius: 8px !important;
+        color: #0f172a !important;
+        transition: all 0.2s ease;
     }
+    .stTextInput input:focus, .stTextArea textarea:focus {
+        border-color: #3b82f6 !important;
+        box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1) !important;
+    }
+    
+    /* Action Buttons */
     .stButton>button {
         width: 100%; border-radius: 8px; height: 3.5rem;
         background: linear-gradient(135deg, #0f172a 0%, #2563eb 100%);
         color: white; font-weight: 800; border: none;
         box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3);
         text-transform: uppercase; letter-spacing: 1px;
+        transition: transform 0.2s;
     }
+    .stButton>button:hover { transform: translateY(-2px); }
+    
+    /* Preview Frame */
+    iframe { border-radius: 12px; border: 1px solid #e2e8f0; box-shadow: 0 20px 40px -10px rgba(0,0,0,0.1); }
     </style>
     """, unsafe_allow_html=True)
 
-# --- 3. SIDEBAR: CONTROL CENTER ---
+# --- 3. SIDEBAR: THE CONTROL CENTER ---
 with st.sidebar:
     st.title("Titan Architect")
     st.caption("v30.5 | Strategy Edition")
@@ -50,44 +70,57 @@ with st.sidebar:
         theme_mode = st.selectbox("Base Theme", [
             "Midnight SaaS (Dark)", 
             "Clean Corporate (Light)", 
-            "Cyberpunk Neon", "Luxury Gold", "Forest Eco", "Ocean Breeze", "Stark Minimalist"
+            "Glassmorphism (Blur)",
+            "Cyberpunk Neon",
+            "Luxury Gold",
+            "Forest Eco",
+            "Ocean Breeze",
+            "Stark Minimalist"
         ])
         c1, c2 = st.columns(2)
         p_color = c1.color_picker("Primary Brand", "#3B82F6") 
         s_color = c2.color_picker("Action (CTA)", "#10B981")  
-        h_font = st.selectbox("Headings", ["Space Grotesk", "Montserrat", "Playfair Display", "Oswald"])
-        b_font = st.selectbox("Body Text", ["Inter", "Open Sans", "Roboto", "Satoshi"])
-        border_rad = st.select_slider("Corner Roundness", ["0px", "4px", "12px", "24px"], value="12px")
-        anim_type = st.selectbox("Animation Style", ["Fade Up", "Zoom In", "None"])
+        
+        st.markdown("**Typography**")
+        h_font = st.selectbox("Headings", ["Space Grotesk", "Montserrat", "Playfair Display", "Oswald", "Clash Display"])
+        b_font = st.selectbox("Body Text", ["Inter", "Open Sans", "Roboto", "Satoshi", "Lora"])
+        
+        st.markdown("**UI Physics**")
+        border_rad = st.select_slider("Corner Roundness", ["0px", "4px", "12px", "24px", "40px"], value="12px")
+        anim_type = st.selectbox("Animation Style", ["Fade Up", "Zoom In", "Slide Right", "None"])
 
-    # 3.2 MODULE MANAGER
+    # 3.2 MODULE MANAGER (EXPANDED WITH NEW FEATURES)
     with st.expander("🧩 Section Manager", expanded=False):
+        st.caption("Toggle sections to include:")
         show_hero = st.checkbox("Hero Carousel", value=True)
         show_stats = st.checkbox("Trust Stats/Logos", value=True)
         show_features = st.checkbox("Feature Grid", value=True)
-        show_magic = st.checkbox("✨ Magic Section (Sheets CMS)", value=True) 
-        show_comparison = st.checkbox("📊 Comparison Table", value=True)     
+        show_magic = st.checkbox("✨ Magic Section (Sheets CMS)", value=True) # NEW
+        show_comparison = st.checkbox("📊 Comparison Table", value=True)     # NEW
         show_inventory = st.checkbox("Inventory / Portfolio", value=True)
         show_gallery = st.checkbox("About Section", value=True)
         show_testimonials = st.checkbox("Testimonials", value=True)
         show_faq = st.checkbox("F.A.Q.", value=True)
-        show_audit = st.checkbox("📝 Audit Form (Lead Gen)", value=True)     
+        show_audit = st.checkbox("📝 Audit Form (Lead Gen)", value=True)     # NEW
         show_cta = st.checkbox("Final Call to Action", value=False)
 
     # 3.3 TECHNICAL
     with st.expander("⚙️ SEO & Analytics", expanded=False):
-        seo_area = st.text_input("Service Area", "Global Deployment")
-        seo_kw = st.text_area("Keywords", "stop web rent, no monthly fee website, 0.1s speed")
+        st.markdown("**Targeting**")
+        seo_area = st.text_input("Service Area (City/Region)", "Global / Online")
+        seo_kw = st.text_area("SEO Keywords (Comma Separated)", "software, scripts, automation, web development, saas")
+        
+        st.markdown("**Verification**")
         gsc_tag = st.text_input("Google Verification ID")
-        ga_tag = st.text_input("Google Analytics ID")
+        ga_tag = st.text_input("Google Analytics ID (G-XXXX)")
         og_image = st.text_input("Social Share Image URL")
 
 # --- 4. MAIN WORKSPACE ---
 st.title("🏗️ Site Content Builder")
 
-tabs = st.tabs(["1. Identity", "2. Copy & Content", "3. Strategy & Pricing", "4. Inventory", "5. Legal"])
+tabs = st.tabs(["1. Identity", "2. Content Blocks", "3. Strategy & Pricing", "4. Inventory & Legal"])
 
-with tabs[0]: 
+with tabs[0]: # IDENTITY
     c1, c2 = st.columns(2)
     with c1:
         biz_name = st.text_input("Business Name", "StopWebRent")
@@ -97,23 +130,25 @@ with tabs[0]:
     with c2:
         prod_url = st.text_input("Website URL", "https://stopwebrent.com")
         biz_addr = st.text_area("Address", "Kaydiem Script Lab, Kolkata Innovation Node.", height=100)
-        seo_d = st.text_area("Meta Description", "We build ultra-fast static websites. Pay once, own it forever.", height=100)
+        map_iframe = st.text_area("Map/Footer Code", placeholder='<iframe src="..."></iframe>', height=100)
+        seo_d = st.text_area("Meta Description", "We build ultra-fast static websites for local businesses. Pay once, own it forever.", height=100)
         logo_url = st.text_input("Logo URL (PNG/SVG)")
-    
-    st.caption("Social Links")
+        
+    st.subheader("Social Links")
     sc1, sc2, sc3 = st.columns(3)
     fb_link = sc1.text_input("Facebook URL")
     ig_link = sc2.text_input("Instagram URL")
     x_link = sc3.text_input("X (Twitter) URL")
+    
     sc4, sc5, sc6 = st.columns(3)
     li_link = sc4.text_input("LinkedIn URL")
     yt_link = sc5.text_input("YouTube URL")
     wa_num = sc6.text_input("WhatsApp Number (No +)", "966572562151")
 
-with tabs[1]: 
+with tabs[1]: # CONTENT BLOCKS
     st.subheader("Hero Carousel")
     hero_h = st.text_input("Hero Headline", "Stop Renting Your Website.")
-    hero_sub = st.text_input("Hero Subtext", "The Titan Engine is the world’s first 0.1s website architecture that runs on $0 monthly fees.")
+    hero_sub = st.text_input("Hero Subtext", "The Titan Engine is the world’s first 0.1s website architecture that runs on $0 monthly fees. Pay once. Own it forever.")
     
     hc1, hc2, hc3 = st.columns(3)
     hero_img_1 = hc1.text_input("Slide 1 Image", "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=1600")
@@ -126,8 +161,10 @@ with tabs[1]:
     col_s1, col_s2, col_s3 = st.columns(3)
     stat_1 = col_s1.text_input("Stat 1", "$1,491")
     label_1 = col_s1.text_input("Label 1", "5-Year Savings")
+    
     stat_2 = col_s2.text_input("Stat 2", "0.1s")
     label_2 = col_s2.text_input("Label 2", "Load Speed")
+    
     stat_3 = col_s3.text_input("Stat 3", "100%")
     label_3 = col_s3.text_input("Label 3", "Ownership")
 
@@ -147,7 +184,7 @@ with tabs[1]:
     about_short = c_a1.text_area("Short Summary", "Traditional agencies and builders like Wix/Shopify charge you 'rent' every month. If you stop paying, they delete your business. We changed the rules.", height=200)
     about_long = c_a2.text_area("Long Content", "**The Death of the Subscription Model**\nFor too long, agencies have forced local businesses into 'forever-payments'. At StopWebRent, we view a website as a structural asset.", height=200)
 
-with tabs[2]: 
+with tabs[2]: # STRATEGY & PRICING (NEW)
     st.subheader("✨ Magic Section (Google Sheets CMS)")
     magic_h = st.text_input("Magic Headline", "Control Your Empire from a Spreadsheet")
     magic_desc = st.text_area("Magic Description", "No WordPress dashboard. No plugins to update. Just open your private Google Sheet, change a text, and watch your site update globally in seconds.")
@@ -161,12 +198,13 @@ with tabs[2]:
     comp_wix_price = c2.text_input("Competitor 5-Year Cost", "$1,815")
     comp_save = c3.text_input("Total Savings Amount", "$1,491")
 
-with tabs[3]: 
+with tabs[3]: # INVENTORY & LEGAL
     st.info("⚡ Power your inventory with a Google Sheet")
     sheet_url = st.text_input("Google Sheet CSV Link", placeholder="https://docs.google.com/spreadsheets/d/e/.../pub?output=csv")
     custom_feat = st.text_input("Default Product Image URL (Fallback)", "https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=800")
-
-with tabs[4]: 
+    
+    st.divider()
+    
     st.subheader("Trust & Legal")
     testi_data = st.text_area("Testimonials (Name | Quote)", "Joe S. | I was paying $40/month for Wix. StopWebRent saved me $480 this year.\nLakshmi Builders | The Google Sheets integration is magic.", height=100)
     faq_data = st.text_area("FAQ Data (Q? ? A)", "Do I really pay $0 for hosting? ? Yes. We use static architecture that fits within the free tiers of enterprise CDNs.\nWhat about my Domain Name? ? You pay ~$15/year directly to the registrar.", height=100)
@@ -175,9 +213,10 @@ with tabs[4]:
     priv_txt = l1.text_area("Privacy Policy Text", "**Digital Sovereignty**\nWe respect your data...", height=200)
     term_txt = l2.text_area("Terms of Service Text", "**Ownership**\nYou own the code upon payment...", height=200)
 
-# --- 5. COMPILER ENGINE ---
+# --- 5. COMPILER ENGINE (V30.5 COMPLETE) ---
 
 def format_text(text):
+    """Advanced Text Formatter v30.4 (Regex)"""
     if not text: return ""
     processed_text = re.sub(r'\*\*(.*?)\*\*', r'<strong>\1</strong>', text)
     lines = processed_text.split('\n')
@@ -214,7 +253,10 @@ def gen_schema():
         "telephone": biz_phone,
         "email": biz_email,
         "areaServed": seo_area,
-        "address": {"@type": "PostalAddress", "streetAddress": biz_addr},
+        "address": {
+            "@type": "PostalAddress",
+            "streetAddress": biz_addr
+        },
         "url": prod_url,
         "description": seo_d
     }
@@ -230,6 +272,7 @@ def get_theme_css():
     if anim_type == "Fade Up": anim_css = ".reveal { opacity: 0; transform: translateY(30px); transition: all 0.8s ease-out; } .reveal.active { opacity: 1; transform: translateY(0); }"
     elif anim_type == "Zoom In": anim_css = ".reveal { opacity: 0; transform: scale(0.95); transition: all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275); } .reveal.active { opacity: 1; transform: scale(1); }"
     
+    # Hero Carousel CSS
     hero_css = """
     .hero { position: relative; min-height: 90vh; overflow: hidden; display: flex; align-items: center; justify-content: center; text-align: center; color: white; padding-top: 80px; background-color: var(--p); }
     .carousel-slide { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-size: cover; background-position: center; opacity: 0; transition: opacity 1.5s ease-in-out; z-index: 0; }
@@ -240,52 +283,84 @@ def get_theme_css():
     """
 
     return f"""
-    :root {{ --p: {p_color}; --s: {s_color}; --bg: {bg}; --txt: {txt}; --card: {card}; --radius: {border_rad}; --nav: {glass}; --h-font: '{h_font}', sans-serif; --b-font: '{b_font}', sans-serif; }}
+    :root {{
+        --p: {p_color}; --s: {s_color}; --bg: {bg}; --txt: {txt}; --card: {card};
+        --radius: {border_rad}; --nav: {glass};
+        --h-font: '{h_font}', sans-serif; --b-font: '{b_font}', sans-serif;
+    }}
     * {{ box-sizing: border-box; }}
     html {{ scroll-behavior: smooth; }}
     body {{ background-color: var(--bg); color: var(--txt); font-family: var(--b-font); margin: 0; line-height: 1.6; overflow-x: hidden; }}
+    
     p, h1, h2, h3, h4, span, li, div {{ color: inherit; }}
     h1, h2, h3, h4 {{ font-family: var(--h-font); color: var(--p); line-height: 1.1; margin-bottom: 1rem; }}
     strong {{ color: var(--p); font-weight: 800; }}
+    
     input, textarea, select {{ width: 100%; padding: 0.8rem; margin-bottom: 1rem; border: 1px solid #ccc; border-radius: 6px; font-family: inherit; }}
     label {{ color: var(--txt); font-weight: bold; margin-bottom: 0.5rem; display: block; }}
+
     .container {{ max-width: 1280px; margin: 0 auto; padding: 0 20px; }}
-    .btn {{ display: inline-block; padding: 1rem 2.5rem; border-radius: var(--radius); font-weight: 700; text-decoration: none; transition: 0.3s; text-transform: uppercase; cursor: pointer; border: none; text-align: center; }}
+    .btn {{ display: inline-block; padding: 1rem 2.5rem; border-radius: var(--radius); font-weight: 700; text-decoration: none; transition: 0.3s; text-transform: uppercase; letter-spacing: 0.5px; cursor: pointer; border: none; text-align: center; }}
     .btn-primary {{ background: var(--p); color: white !important; }}
     .btn-accent {{ background: var(--s); color: white !important; box-shadow: 0 10px 25px -5px var(--s); }}
     .btn:hover {{ transform: translateY(-3px); filter: brightness(1.15); }}
+    
     nav {{ position: fixed; top: 0; width: 100%; z-index: 1000; background: var(--nav); backdrop-filter: blur(12px); border-bottom: 1px solid rgba(100,100,100,0.1); padding: 1rem 0; }}
     .nav-flex {{ display: flex; justify-content: space-between; align-items: center; }}
     .nav-links {{ display: flex; align-items: center; }}
     .nav-links a {{ margin-left: 2rem; text-decoration: none; font-weight: 600; color: var(--txt); font-size: 0.9rem; opacity: 0.8; transition:0.2s; }}
     .nav-links a:hover {{ opacity: 1; color: var(--s); }}
     .mobile-menu {{ display: none; font-size: 1.5rem; cursor: pointer; }}
+    
     {hero_css}
     .hero h1 {{ color: white; font-size: clamp(2.5rem, 8vw, 5rem); margin-bottom: 1.5rem; }}
     .hero p {{ color: rgba(255,255,255,0.9); font-size: clamp(1.1rem, 2vw, 1.5rem); max-width: 700px; margin: 0 auto 2.5rem auto; }}
+    
     section {{ padding: 5rem 0; }}
     .section-head {{ text-align: center; margin-bottom: 4rem; }}
     .section-head h2 {{ font-size: 2.5rem; }}
+    
+    /* GRIDS */
     .grid-3 {{ display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; }}
     .contact-layout {{ display: grid; grid-template-columns: 1fr 2fr; gap: 3rem; }}
     .about-grid, .magic-grid {{ display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center; }}
+    
     .card {{ background: var(--card); padding: 2rem; border-radius: var(--radius); border: 1px solid rgba(100,100,100,0.1); transition: 0.3s; height: 100%; display: flex; flex-direction: column; }}
     .card:hover {{ transform: translateY(-5px); box-shadow: 0 20px 40px -10px rgba(0,0,0,0.1); border-color: var(--s); }}
+    
     .prod-img {{ width: 100%; height: 250px; object-fit: cover; border-radius: calc(var(--radius) - 4px); margin-bottom: 1.5rem; background: #f1f5f9; }}
+    
+    /* FAQ Styling */
     details {{ background: var(--card); border: 1px solid rgba(100,100,100,0.1); border-radius: 8px; margin-bottom: 1rem; padding: 1rem; cursor: pointer; color: var(--txt); }}
     details summary {{ font-weight: bold; font-size: 1.1rem; color: var(--txt); }}
+    details p {{ margin-top: 1rem; margin-bottom: 0; opacity: 0.9; color: var(--txt); }}
+
+    /* Footer & Social Icons */
     footer {{ background: var(--p); color: white; padding: 4rem 0; margin-top: auto; }}
     .footer-grid {{ display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 3rem; }}
-    .footer a {{ color: rgba(255,255,255,0.8) !important; text-decoration: none; display: block; margin-bottom: 0.5rem; transition: 0.3s; }}
+    .footer a, footer a {{ color: rgba(255,255,255,0.8) !important; text-decoration: none; display: block; margin-bottom: 0.5rem; transition: 0.3s; }}
+    .footer a:hover, footer a:hover {{ color: #ffffff !important; text-decoration: underline; }}
+    
     .social-icon {{ width: 24px; height: 24px; fill: rgba(255,255,255,0.7); transition: 0.3s; }}
     .social-icon:hover {{ fill: #ffffff; transform: scale(1.1); }}
-    .share-btn {{ width: 42px; height: 42px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: none; cursor: pointer; transition: 0.3s; color: white; }}
-    .share-wa {{ background: #25D366; }} .share-fb {{ background: #1877F2; }} .share-x {{ background: #000000; }} .share-li {{ background: #0A66C2; }} .share-cp {{ background: #64748b; }}
+
+    /* Tables & Strategy Elements */
     .comp-table {{ width: 100%; border-collapse: collapse; margin: 20px 0; background: var(--card); border-radius: var(--radius); overflow: hidden; }}
     .comp-table th, .comp-table td {{ padding: 20px; text-align: left; border-bottom: 1px solid rgba(128,128,128,0.1); }}
     .comp-table th {{ background: var(--p); color: white; }}
     .savings-box {{ background: var(--s); color: white; padding: 2rem; border-radius: var(--radius); text-align: center; margin-top: 2rem; }}
+
+    /* Real Brand Share Buttons */
+    .share-btn {{ width: 42px; height: 42px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: none; cursor: pointer; transition: 0.3s; color: white; }}
+    .share-btn:hover {{ transform: scale(1.1); filter: brightness(1.1); }}
+    .share-btn svg {{ width: 20px; height: 20px; fill: currentColor; }}
+    .share-wa {{ background: #25D366; }} .share-fb {{ background: #1877F2; }} .share-x {{ background: #000000; }} .share-li {{ background: #0A66C2; }} .share-cp {{ background: #64748b; }}
+    
+    .detail-view {{ display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: start; }}
+    .legal-text h1 {{ font-size: 3rem; margin-bottom: 2rem; color: var(--p); }} .legal-text h3 {{ margin-top: 2rem; font-size: 1.5rem; color: var(--p); }} .legal-text p {{ color: var(--txt); opacity: 0.9; }}
+
     {anim_css}
+    
     @media (max-width: 768px) {{
         .nav-links {{ position: fixed; top: 70px; left: -100%; width: 100%; height: calc(100vh - 70px); background: var(--bg); flex-direction: column; padding: 2rem; transition: 0.3s; align-items: flex-start; justify-content: flex-start; border-top: 1px solid rgba(0,0,0,0.1); }}
         .nav-links.active {{ left: 0; }}
@@ -334,6 +409,7 @@ def gen_hero():
     """
 
 def get_simple_icon(name):
+    # UPGRADED ICON LIBRARY V30.4
     name = name.lower().strip()
     if "code" in name: return '<svg viewBox="0 0 24 24" width="32" height="32" fill="currentColor"><path d="M9.4 16.6L4.8 12l4.6-4.6L8 6l-6 6 6 6 1.4-1.4zm5.2 0l4.6-4.6-4.6-4.6L16 6l6 6-6 6-1.4-1.4z"/></svg>'
     if "database" in name: return '<svg viewBox="0 0 24 24" width="32" height="32" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>'
@@ -354,8 +430,12 @@ def gen_features():
     for line in lines:
         if "|" in line:
             parts = line.split('|')
-            icon = get_simple_icon(parts[0])
-            cards += f"""<div class="card reveal"><div style="color:var(--s); margin-bottom:1rem;">{icon}</div><h3 style="color:var(--p); font-size:1.2rem; text-transform:uppercase; letter-spacing:1px;">{parts[1].strip()}</h3><div style="opacity:0.9; color:var(--txt); font-size:0.95rem;">{format_text(parts[2].strip())}</div></div>"""
+            if len(parts) >= 3:
+                icon_code = get_simple_icon(parts[0])
+                # FIXED: Text color inheritance
+                cards += f"""<div class="card reveal"><div style="color:var(--s); margin-bottom:1rem;">{icon_code}</div><h3 style="color:var(--p); font-size:1.2rem; text-transform:uppercase; letter-spacing:1px;">{parts[1].strip()}</h3><div style="opacity:0.9; color:var(--txt); font-size:0.95rem;">{format_text(parts[2].strip())}</div></div>"""
+            elif len(parts) == 2:
+                cards += f"""<div class="card reveal"><h3 style="color:var(--s); font-size:1.2rem; text-transform:uppercase; letter-spacing:1px;">{parts[0].strip()}</h3><div style="opacity:0.9; color:var(--txt); font-size:0.95rem;">{format_text(parts[1].strip())}</div></div>"""
     return f"""<section id="features"><div class="container"><div class="section-head reveal"><h2>{f_title}</h2></div><div class="grid-3">{cards}</div></div></section>"""
 
 def gen_magic():
@@ -455,8 +535,14 @@ def gen_product_page_content(is_demo=False):
     return f"""<section style="padding-top:150px;"><div class="container"><div id="product-detail" class="detail-view"><div style="background:#eee; height:400px; border-radius:12px; display:flex; align-items:center; justify-content:center; color:#333;">Loading Product...</div></div></div></section>
     {gen_csv_parser()}<script>{demo_flag}
     function shareWA(url, title) {{ window.open('https://wa.me/?text=' + encodeURIComponent(title + ' ' + url), '_blank'); }}
+    function shareFB(url) {{ window.open('https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(url), '_blank'); }}
+    function shareX(url, title) {{ window.open('https://twitter.com/intent/tweet?text=' + encodeURIComponent(title) + '&url=' + encodeURIComponent(url), '_blank'); }}
+    function shareLI(url) {{ window.open('https://www.linkedin.com/sharing/share-offsite/?url=' + encodeURIComponent(url), '_blank'); }}
+    function copyLink(url) {{ navigator.clipboard.writeText(url); alert('Link copied!'); }}
+    
     async function loadProduct() {{
         const params = new URLSearchParams(window.location.search); let targetName = params.get('item');
+        const currentUrl = window.location.href;
         if(isDemo) {{ /* Demo Logic */ }} else if(!targetName) {{ document.getElementById('product-detail').innerHTML = '<h2>Product not found</h2>'; return; }}
         try {{
             const res = await fetch('{sheet_url}'); const txt = await res.text(); const lines = txt.split(/\\r\\n|\\n/);
@@ -466,7 +552,24 @@ def gen_product_page_content(is_demo=False):
                 if(clean[0] === targetName) {{
                     let img = clean[3] && clean[3].length > 5 ? clean[3] : '{custom_feat}';
                     if(clean[6] && clean[6].length > 5) img = clean[6];
-                    document.getElementById('product-detail').innerHTML = `<img src="${{img}}" style="width:100%; border-radius:12px; box-shadow:0 10px 30px rgba(0,0,0,0.1);"><div style="color:var(--txt);"><h1 style="color:var(--p);">${{clean[0]}}</h1><p style="color:var(--s); font-size:1.5rem; font-weight:bold;">${{clean[1]}}</p><p style="opacity:0.9;">${{clean[2]}}</p><a href="https://wa.me/{wa_num}?text=Order ${{encodeURIComponent(clean[0])}}" class="btn-primary btn" style="width:100%; margin-top:2rem;">Order on WhatsApp</a></div>`;
+                    document.getElementById('product-detail').innerHTML = `
+                    <img src="${{img}}" style="width:100%; border-radius:12px; box-shadow:0 10px 30px rgba(0,0,0,0.1);">
+                    <div style="color:var(--txt);">
+                        <h1 style="color:var(--p);">${{clean[0]}}</h1>
+                        <p style="color:var(--s); font-size:1.5rem; font-weight:bold;">${{clean[1]}}</p>
+                        <p style="opacity:0.9;">${{clean[2]}}</p>
+                        <a href="https://wa.me/{wa_num}?text=Order ${{encodeURIComponent(clean[0])}}" class="btn-primary btn" style="width:100%; margin-top:2rem;">Order on WhatsApp</a>
+                        <div style="margin-top:2rem;">
+                            <p style="font-size:0.9rem; font-weight:bold; opacity:0.7;">SHARE THIS:</p>
+                            <div style="display:flex; gap:0.8rem;">
+                                <button onclick="shareWA('${{currentUrl}}', '${{clean[0]}}')" class="share-btn share-wa"><svg viewBox="0 0 24 24"><path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91c0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21c5.46 0 9.91-4.45 9.91-9.91c0-2.65-1.03-5.14-2.9-7.01A9.816 9.816 0 0 0 12.04 2m.01 1.67c2.2 0 4.26.86 5.82 2.42a8.225 8.225 0 0 1 2.41 5.83c0 4.54-3.7 8.23-8.24 8.23c-1.48 0-2.93-.39-4.19-1.15l-.3-.17l-3.12.82l.83-3.04l-.2-.32a8.188 8.188 0 0 1-1.26-4.38c.01-4.54 3.7-8.24 8.25-8.24m-3.53 3.16c-.13 0-.35.05-.54.26c-.19.2-.72.7-.72 1.72s.73 2.01.83 2.14c.1.13 1.44 2.19 3.48 3.07c.49.21.87.33 1.16.43c.49.16.94.13 1.29.08c.4-.06 1.21-.5 1.38-.98c.17-.48.17-.89.12-.98c-.05-.09-.18-.13-.37-.23c-.19-.1-.1.13-.1.13s-1.13-.56-1.32-.66c-.19-.1-.32-.15-.45.05c-.13.2-.51.65-.62.78c-.11.13-.23.15-.42.05c-.19-.1-.8-.3-1.53-.94c-.57-.5-1.02-1.12-1.21-1.45c-.11-.19-.01-.29.09-.38c.09-.08.19-.23.29-.34c.1-.11.13-.19.19-.32c.06-.13.03-.24-.01-.34c-.05-.1-.45-1.08-.62-1.48c-.16-.4-.36-.34-.51-.35c-.11-.01-.25-.01-.4-.01Z"/></svg></button>
+                                <button onclick="shareFB('${{currentUrl}}')" class="share-btn share-fb"><svg viewBox="0 0 24 24"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg></button>
+                                <button onclick="shareX('${{currentUrl}}', '${{clean[0]}}')" class="share-btn share-x"><svg viewBox="0 0 24 24"><path d="M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584l-6.638 7.584H.474l8.6-9.83L0 1.154h7.594l5.243 6.932ZM17.61 20.644h2.039L6.486 3.24H4.298Z"></path></svg></button>
+                                <button onclick="shareLI('${{currentUrl}}')" class="share-btn share-li"><svg viewBox="0 0 24 24"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2a2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6zM2 9h4v12H2zM4 2a2 2 0 1 1-2 2a2 2 0 0 1 2-2z"></path></svg></button>
+                                <button onclick="copyLink('${{currentUrl}}')" class="share-btn share-cp"><svg viewBox="0 0 24 24"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"></path></svg></button>
+                            </div>
+                        </div>
+                    </div>`;
                     break;
                 }}
             }}
@@ -489,7 +592,7 @@ if show_testimonials:
     home_content += f'<section style="background:rgba(0,0,0,0.02)"><div class="container"><div class="section-head reveal"><h2>Client Stories</h2></div><div class="grid-3">{t_cards}</div></div></section>'
 if show_faq: home_content += gen_faq_section()
 if show_audit: home_content += gen_audit_form() # NEW
-if show_cta: home_content += f'<section style="background:var(--s); color:white; text-align:center;"><div class="container reveal"><h2>Ready to Start?</h2><p style="margin-bottom:2rem; color:white;">Let us build your future today.</p><a href="contact.html" class="btn" style="background:white; color:var(--s);">Get a Quote</a></div></section>'
+if show_cta: home_content += f'<section style="background:var(--s); color:white; text-align:center;"><div class="container reveal"><h2>Ready to Start?</h2><p style="margin-bottom:2rem;">Let us build your future today.</p><a href="contact.html" class="btn" style="background:white; color:var(--s);">Get a Quote</a></div></section>'
 
 # --- 7. RENDER & DEPLOY ---
 st.divider()
@@ -497,13 +600,29 @@ st.subheader("🚀 Launchpad")
 
 preview_mode = st.radio("Preview Page:", ["Home", "About", "Contact", "Privacy", "Terms", "Product Detail (Demo)"], horizontal=True)
 
+# HELPER: Function to generate a header for inner pages
+def gen_inner_header(title):
+    return f"""
+    <section class="hero" style="min-height: 40vh; background-image: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('{hero_img_1}'); background-size: cover; background-position: center;">
+        <div class="container">
+            <h1 style="font-size: 3.5rem; margin-bottom: 0;">{title}</h1>
+        </div>
+    </section>
+    """
+
+# GENERATE INNER PAGES
+about_content = f"{gen_inner_header('About Us')}<section><div class='container'><div class='about-grid'><div class='legal-text'>{format_text(about_long)}</div><img src='{about_img}' style='width:100%; border-radius:12px; box-shadow:0 10px 30px rgba(0,0,0,0.1);'></div></div></section>"
+contact_content = f"{gen_inner_header('Contact Us')}<section><div class='container'><div class='contact-layout'><div><div style='background:var(--card); padding:2rem; border-radius:12px; border:1px solid rgba(100,100,100,0.2);'><h3 style='color:var(--p);'>Get In Touch</h3><p style='margin-top:1rem; color:var(--txt);'><strong>📍 Address:</strong><br>{biz_addr}</p><p style='margin-top:1rem; color:var(--txt);'><strong>📞 Phone:</strong><br><a href='tel:{biz_phone}' style='color:var(--s);'>{biz_phone}</a></p><p style='margin-top:1rem; color:var(--txt);'><strong>📧 Email:</strong><br><a href='mailto:{biz_email}'>{biz_email}</a></p><br><a href='https://wa.me/{wa_num}' target='_blank' class='btn btn-accent' style='width:100%; text-align:center;'>Chat on WhatsApp</a></div></div><div class='card'><h3 style='margin-bottom:1.5rem;'>Send a Message</h3><form action='https://formsubmit.co/{biz_email}' method='POST'><div style='display:grid; grid-template-columns:1fr 1fr; gap:1rem;'><div><label>Name</label><input type='text' name='name' required></div><div><label>Email</label><input type='email' name='email' required></div></div><label>Message</label><textarea name='message' rows='5' required></textarea><button type='submit' class='btn btn-primary' style='width:100%;'>Send Message</button><input type='hidden' name='_captcha' value='false'><input type='hidden' name='_next' value='{prod_url}/contact.html'></form></div></div><br><br><div style='border-radius:12px; overflow:hidden; box-shadow:0 10px 30px rgba(0,0,0,0.1);'>{map_iframe}</div></div></section>"
+privacy_content = f"{gen_inner_header('Privacy Policy')}<section><div class='container legal-text'>{format_text(priv_txt)}</div></section>"
+terms_content = f"{gen_inner_header('Terms of Service')}<section><div class='container legal-text'>{format_text(term_txt)}</div></section>"
+
 c1, c2 = st.columns([3, 1])
 with c1:
     if preview_mode == "Home": st.components.v1.html(build_page("Home", home_content), height=600, scrolling=True)
     elif preview_mode == "About": st.components.v1.html(build_page("About", about_content), height=600, scrolling=True)
     elif preview_mode == "Contact": st.components.v1.html(build_page("Contact", contact_content), height=600, scrolling=True)
-    elif preview_mode == "Privacy": st.components.v1.html(build_page("Privacy", priv_txt), height=600, scrolling=True)
-    elif preview_mode == "Terms": st.components.v1.html(build_page("Terms", term_txt), height=600, scrolling=True)
+    elif preview_mode == "Privacy": st.components.v1.html(build_page("Privacy", privacy_content), height=600, scrolling=True)
+    elif preview_mode == "Terms": st.components.v1.html(build_page("Terms", terms_content), height=600, scrolling=True)
     elif preview_mode == "Product Detail (Demo)": st.info("Demo Mode Active"); st.components.v1.html(build_page("Product", gen_product_page_content(is_demo=True)), height=600, scrolling=True)
 
 with c2:
@@ -513,8 +632,8 @@ with c2:
             zf.writestr("index.html", build_page("Home", home_content))
             zf.writestr("about.html", build_page("About", about_content))
             zf.writestr("contact.html", build_page("Contact", contact_content))
-            zf.writestr("privacy.html", build_page("Privacy Policy", format_text(priv_txt)))
-            zf.writestr("terms.html", build_page("Terms of Service", format_text(term_txt)))
+            zf.writestr("privacy.html", build_page("Privacy Policy", privacy_content))
+            zf.writestr("terms.html", build_page("Terms of Service", terms_content))
             zf.writestr("product.html", build_page("Product Details", gen_product_page_content(is_demo=False)))
             zf.writestr("404.html", build_page("404 Not Found", gen_404_content()))
             zf.writestr("robots.txt", f"User-agent: *\nAllow: /\nSitemap: {prod_url}/sitemap.xml")
