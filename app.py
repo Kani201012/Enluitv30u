@@ -89,7 +89,7 @@ with st.sidebar:
         border_rad = st.select_slider("Corner Roundness", ["0px", "4px", "12px", "24px", "40px"], value="12px")
         anim_type = st.selectbox("Animation Style", ["Fade Up", "Zoom In", "Slide Right", "None"])
 
-    # 3.2 MODULE MANAGER (EXPANDED WITH NEW FEATURES)
+    # 3.2 MODULE MANAGER
     with st.expander("🧩 Section Manager", expanded=False):
         st.caption("Toggle sections to include:")
         show_hero = st.checkbox("Hero Carousel", value=True)
@@ -118,7 +118,7 @@ with st.sidebar:
 # --- 4. MAIN WORKSPACE ---
 st.title("🏗️ Site Content Builder")
 
-tabs = st.tabs(["1. Identity", "2. Content Blocks", "3. Strategy & Pricing", "4. Inventory & Legal"])
+tabs = st.tabs(["1. Identity", "2. Copy & Content", "3. Strategy & Pricing", "4. Inventory", "5. Legal"])
 
 with tabs[0]: # IDENTITY
     c1, c2 = st.columns(2)
@@ -253,10 +253,7 @@ def gen_schema():
         "telephone": biz_phone,
         "email": biz_email,
         "areaServed": seo_area,
-        "address": {
-            "@type": "PostalAddress",
-            "streetAddress": biz_addr
-        },
+        "address": {"@type": "PostalAddress", "streetAddress": biz_addr},
         "url": prod_url,
         "description": seo_d
     }
@@ -272,7 +269,6 @@ def get_theme_css():
     if anim_type == "Fade Up": anim_css = ".reveal { opacity: 0; transform: translateY(30px); transition: all 0.8s ease-out; } .reveal.active { opacity: 1; transform: translateY(0); }"
     elif anim_type == "Zoom In": anim_css = ".reveal { opacity: 0; transform: scale(0.95); transition: all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275); } .reveal.active { opacity: 1; transform: scale(1); }"
     
-    # Hero Carousel CSS
     hero_css = """
     .hero { position: relative; min-height: 90vh; overflow: hidden; display: flex; align-items: center; justify-content: center; text-align: center; color: white; padding-top: 80px; background-color: var(--p); }
     .carousel-slide { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-size: cover; background-position: center; opacity: 0; transition: opacity 1.5s ease-in-out; z-index: 0; }
@@ -300,7 +296,7 @@ def get_theme_css():
     label {{ color: var(--txt); font-weight: bold; margin-bottom: 0.5rem; display: block; }}
 
     .container {{ max-width: 1280px; margin: 0 auto; padding: 0 20px; }}
-    .btn {{ display: inline-block; padding: 1rem 2.5rem; border-radius: var(--radius); font-weight: 700; text-decoration: none; transition: 0.3s; text-transform: uppercase; letter-spacing: 0.5px; cursor: pointer; border: none; text-align: center; }}
+    .btn {{ display: inline-block; padding: 1rem 2.5rem; border-radius: var(--radius); font-weight: 700; text-decoration: none; transition: 0.3s; text-transform: uppercase; cursor: pointer; border: none; text-align: center; }}
     .btn-primary {{ background: var(--p); color: white !important; }}
     .btn-accent {{ background: var(--s); color: white !important; box-shadow: 0 10px 25px -5px var(--s); }}
     .btn:hover {{ transform: translateY(-3px); filter: brightness(1.15); }}
@@ -592,7 +588,7 @@ if show_testimonials:
     home_content += f'<section style="background:rgba(0,0,0,0.02)"><div class="container"><div class="section-head reveal"><h2>Client Stories</h2></div><div class="grid-3">{t_cards}</div></div></section>'
 if show_faq: home_content += gen_faq_section()
 if show_audit: home_content += gen_audit_form() # NEW
-if show_cta: home_content += f'<section style="background:var(--s); color:white; text-align:center;"><div class="container reveal"><h2>Ready to Start?</h2><p style="margin-bottom:2rem;">Let us build your future today.</p><a href="contact.html" class="btn" style="background:white; color:var(--s);">Get a Quote</a></div></section>'
+if show_cta: home_content += f'<section style="background:var(--s); color:white; text-align:center;"><div class="container reveal"><h2>Ready to Start?</h2><p style="margin-bottom:2rem; color:white;">Let us build your future today.</p><a href="contact.html" class="btn" style="background:white; color:var(--s);">Get a Quote</a></div></section>'
 
 # --- 7. RENDER & DEPLOY ---
 st.divider()
@@ -615,6 +611,12 @@ about_content = f"{gen_inner_header('About Us')}<section><div class='container'>
 contact_content = f"{gen_inner_header('Contact Us')}<section><div class='container'><div class='contact-layout'><div><div style='background:var(--card); padding:2rem; border-radius:12px; border:1px solid rgba(100,100,100,0.2);'><h3 style='color:var(--p);'>Get In Touch</h3><p style='margin-top:1rem; color:var(--txt);'><strong>📍 Address:</strong><br>{biz_addr}</p><p style='margin-top:1rem; color:var(--txt);'><strong>📞 Phone:</strong><br><a href='tel:{biz_phone}' style='color:var(--s);'>{biz_phone}</a></p><p style='margin-top:1rem; color:var(--txt);'><strong>📧 Email:</strong><br><a href='mailto:{biz_email}'>{biz_email}</a></p><br><a href='https://wa.me/{wa_num}' target='_blank' class='btn btn-accent' style='width:100%; text-align:center;'>Chat on WhatsApp</a></div></div><div class='card'><h3 style='margin-bottom:1.5rem;'>Send a Message</h3><form action='https://formsubmit.co/{biz_email}' method='POST'><div style='display:grid; grid-template-columns:1fr 1fr; gap:1rem;'><div><label>Name</label><input type='text' name='name' required></div><div><label>Email</label><input type='email' name='email' required></div></div><label>Message</label><textarea name='message' rows='5' required></textarea><button type='submit' class='btn btn-primary' style='width:100%;'>Send Message</button><input type='hidden' name='_captcha' value='false'><input type='hidden' name='_next' value='{prod_url}/contact.html'></form></div></div><br><br><div style='border-radius:12px; overflow:hidden; box-shadow:0 10px 30px rgba(0,0,0,0.1);'>{map_iframe}</div></div></section>"
 privacy_content = f"{gen_inner_header('Privacy Policy')}<section><div class='container legal-text'>{format_text(priv_txt)}</div></section>"
 terms_content = f"{gen_inner_header('Terms of Service')}<section><div class='container legal-text'>{format_text(term_txt)}</div></section>"
+
+# PREVIEW LOGIC
+def build_page(title, content, extra_js=""):
+    css = get_theme_css()
+    schema = gen_schema()
+    return f"""<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>{title} | {biz_name}</title><meta name="description" content="{seo_d}">{schema}<style>{css}</style><link href="https://fonts.googleapis.com/css2?family={h_font.replace(' ', '+')}:wght@400;700;900&family={b_font.replace(' ', '+')}:wght@300;400;600&display=swap" rel="stylesheet"></head><body>{gen_nav()}{content}{gen_footer()}{gen_wa_widget()}{gen_scripts()}{extra_js}</body></html>"""
 
 c1, c2 = st.columns([3, 1])
 with c1:
